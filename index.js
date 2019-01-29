@@ -1,10 +1,13 @@
-var fs = require('fs'),
-    path = require('path'),
-    requirejs = require('requirejs'),
-    es = require('event-stream'),
-    glob = require('glob'),
-    _ = require('lodash')._,
-    gutil = require('gulp-util');
+const fs = require('fs');
+const path = require('path');
+const requirejs = require('requirejs');
+const es = require('event-stream');
+const glob = require('glob');
+const _ = require('lodash')._;
+const Vinyl = require('vinyl');
+const PluginError = require('plugin-error');
+const colors = require('ansi-colors');
+const log = require('fancy-log');
 
 var PLUGIN_NAME = 'gulp-durandaljs',
 
@@ -115,13 +118,13 @@ module.exports = function gulpDurandaljs(userOptions){
                 text += '//# sourceMappingURL=' + path.basename(mapOutput);
             }
 
-            stream.write(new gutil.File({
+            stream.write(new Vinyl({
                 path: output,
                 contents: new Buffer(text)
             }));
 
             if(sourceMapText){
-                stream.write(new gutil.File({
+                stream.write(new Vinyl({
                     path: mapOutput,
                     contents: new Buffer(sourceMapText)
                 }));
@@ -131,7 +134,7 @@ module.exports = function gulpDurandaljs(userOptions){
         },
         
         errCb = function(err){
-            stream.emit('error', new gutil.PluginError(PLUGIN_NAME, err));
+            stream.emit('error', new PluginError(PLUGIN_NAME, err));
         };
 
     var rjsConfig = {
@@ -153,7 +156,7 @@ module.exports = function gulpDurandaljs(userOptions){
     requirejs.optimize(rjsConfig, null, errCb);
 
     stream.on('error', function(e){
-        gutil.log('Durandal ' + gutil.colors.red(e.message));
+        log('Durandal ' + colors.red(e.message));
         stream.end();
     });
     
