@@ -3,7 +3,7 @@ const path = require('path');
 const requirejs = require('requirejs');
 const es = require('event-stream');
 const glob = require('glob');
-const _ = require('lodash')._;
+const _ = require('lodash');
 const Vinyl = require('vinyl');
 const PluginError = require('plugin-error');
 const colors = require('ansi-colors');
@@ -79,7 +79,7 @@ module.exports = function gulpDurandaljs(userOptions){
                 relativeToBaseDir = path.relative.bind(path, baseDir),
                 jsFiles = (function() {
                     var expandedJsFiles = _.flatten([ expand('/**/*.js') ]);
-                    return _.unique( mainFile ? [mainFile].concat(expandedJsFiles) : expandedJsFiles );
+                    return _.uniq( mainFile ? [mainFile].concat(expandedJsFiles) : expandedJsFiles );
                 })(),
                 jsModules = jsFiles.map(relativeToBaseDir).map(stripExtension),
                 pluggedFiles = _.flatten( _.map( _.keys(options.pluginMap) , function(ext){return expand('/**/*'+ext);} ) ),
@@ -96,7 +96,7 @@ module.exports = function gulpDurandaljs(userOptions){
                 include = _.filter(modules, options.moduleFilter),
                 exclude = _.reject(modules, options.moduleFilter);
 
-            return { include:_.unique(include), exclude:_.unique(exclude) };
+            return { include:_.uniq(include), exclude:_.uniq(exclude) };
         })(),
 
         insertRequireModules = (function(){

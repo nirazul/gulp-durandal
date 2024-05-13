@@ -84,14 +84,10 @@ gulp.task('build-almond', ['statics-almond', 'index-almond', 'durandal-almond'])
 // Rebuild durandal when sources change. 
 // Naive implementation, but good enough for an example.
 //
-﻿gulp.task('watch', function () {
+gulp.task('watch', function () {
     gulp.watch(['app/**/*'], ['durandal-almond', 'durandal']); 
 });
 
 
 
 gulp.task('default', ['build-simple', 'build-almond', 'watch']);
-
-
-
-
